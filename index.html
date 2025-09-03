@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SN9W0VL22Y"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-SN9W0VL22Y');
+    </script>
+    
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function(){
+            emailjs.init("Z0VMFmiXu1u4xRa9b"); // Replace with your EmailJS public key
+        })();
+    </script>
+    
+    <title>Patient Feedback Survey - Magodo Specialist Hospital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f5f8ff 0%, #e8f4f8 50%, #f0f8ff 100%);
+            min-height: 100vh;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.6;
+        }
+        
+        .survey-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.08),
+                0 4px 16px rgba(0, 0, 0, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .hospital-header {
+            text-align: center;
+            margin-bottom: 32px;
+            position: relative;
+        }
+        
+        .hospital-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            border-radius: 20px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(74, 144, 226, 0.25);
+        }
+        
+        .hospital-icon::before {
+            content: '🏥';
+            font-size: 28px;
+            filter: brightness(0) invert(1);
+        }
+        
+        .hospital-header h1 {
+            color: #2c3e50;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        
+        .hospital-header p {
+            color: #6b7280;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .question-section {
+            margin-bottom: 28px;
+        }
+        
+        .question-title {
+            color: #374151;
+            margin-bottom: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+            padding-bottom: 8px;
+        }
+        
+        .question-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, #4a90e2, #357abd);
+            border-radius: 1px;
+        }
+        
+        .rating-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .rating-option {
+            aspect-ratio: 1;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .rating-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .rating-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #4a90e2;
+        }
+        
+        .rating-option.selected {
+            border-color: #4a90e2;
+            background: #f0f7ff;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.25);
+        }
+        
+        .rating-option.selected::before {
+            opacity: 0.1;
+        }
+        
+        .rating-emoji {
+            font-size: 20px;
+            margin-bottom: 4px;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+        
+        .rating-option.selected .rating-emoji {
+            transform: scale(1.1);
+        }
+        
+        .rating-label {
+            font-size: 10px;
+            color: #6b7280;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .rating-option.selected .rating-label {
+            color: #4a90e2;
+        }
+        
+        .rating-scale {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #9ca3af;
+            font-weight: 500;
+        }
+        
+        .comment-section {
+            margin-bottom: 28px;
+        }
+        
+        .comment-section label {
+            display: block;
+            margin-bottom: 12px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .comment-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            margin-bottom: 16px;
+        }
+        
+        .comment-input:focus {
+            outline: none;
+            border-color: #4a90e2;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        
+        .comment-input::placeholder {
+            color: #9ca3af;
+        }
+        
+        .comment-textarea {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .comment-textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        
+        .comment-textarea::placeholder {
+            color: #9ca3af;
+        }
+        
+        .submit-section {
+            text-align: center;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(74, 144, 226, 0.4);
+        }
+        
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+        
+        .submit-btn:disabled {
+            background: linear-gradient(135deg, #d1d5db, #9ca3af);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .submit-btn:disabled::before {
+            display: none;
+        }
+        
+        .thank-you {
+            display: none;
+            text-align: center;
+            padding: 48px 24px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            40% {
+                transform: translateY(-10px) scale(1.05);
+            }
+            60% {
+                transform: translateY(-5px) scale(1.02);
+            }
+        }
+        
+        .success-icon::after {
+            content: '✓';
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        
+        .thank-you h2 {
+            color: #10b981;
+            margin-bottom: 16px;
+            font-size: 28px;
+            font-weight: 800;
+        }
+        
+        .thank-you p {
+            color: #6b7280;
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+            gap: 8px;
+        }
+        
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .progress-dot.active {
+            background: #4a90e2;
+            transform: scale(1.2);
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            
+            .survey-container {
+                padding: 24px;
+                border-radius: 20px;
+            }
+            
+            .hospital-header h1 {
+                font-size: 20px;
+            }
+            
+            .question-title {
+                font-size: 16px;
+            }
+            
+            .rating-grid {
+                gap: 6px;
+            }
+            
+            .rating-option {
+                padding: 6px 2px;
+            }
+            
+            .rating-emoji {
+                font-size: 18px;
+            }
+            
+            .rating-label {
+                font-size: 9px;
+            }
+            
+            .comment-textarea {
+                min-height: 80px;
+                padding: 12px;
+            }
+            
+            .comment-input {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+            
+            .submit-btn {
+                padding: 14px 20px;
+                font-size: 15px;
+            }
+        }
+        
+        /* Tablet Optimizations */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .survey-container {
+                max-width: 480px;
+                padding: 36px;
+            }
+            
+            .rating-grid {
+                gap: 10px;
+            }
+            
+            .rating-option {
+                padding: 12px 6px;
+            }
+            
+            .rating-emoji {
+                font-size: 24px;
+            }
+        }
+        
+        /* Accessibility Improvements */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        .rating-option:focus {
+            outline: 3px solid #4a90e2;
+            outline-offset: 2px;
+        }
+        
+        .submit-btn:focus {
+            outline: 3px solid #4a90e2;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="survey-container">
+        <div class="survey-form" id="surveyForm">
+            <div class="hospital-header">
+                <div class="hospital-icon"></div>
+                <h1>Magodo Specialist Hospital</h1>
+                <p>Your feedback helps us serve you better</p>
+            </div>
+            
+            <div class="progress-indicator">
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+            
+            <div class="question-section">
+                <h3 class="question-title">How satisfied are you with our care?</h3>
+                <div class="rating-grid" id="satisfactionRating">
+                    <button type="button" class="rating-option" data-value="1">
+                        <span class="rating-emoji">😞</span>
+                        <span class="rating-label">Very Poor</span>
+                    </button>
+                    <button type="button" class="rating-option" data-value="2">
+                        <span class="rating-emoji">😕</span>
+                        <span class="rating-label">Poor</span>
+                    </button>
+                    <button type="button" class="rating-option" data-value="3">
+                        <span class="rating-emoji">😐</span>
+                        <span class="rating-label">Fair</span>
+                    </button>
+                    <button type="button" class="rating-option" data-value="4">
+                        <span class="rating-emoji">😊</span>
+                        <span class="rating-label">Good</span>
+                    </button>
+                    <button type="button" class="rating-option" data-value="5">
+                        <span class="rating-emoji">🤩</span>
+                        <span class="rating-label">Excellent</span>
+                    </button>
+                </div>
+                <div class="rating-scale">
+                    <span>Not satisfied</span>
+                    <span>Very satisfied</span>
+                </div>
+            </div>
+            
+            <div class="question-section">
+                <h3 class="question-title">Would you recommend us to others?</h3>
+                <div class="rating-grid" id="recommendRating">
+                    <button type="button" class="rating-option" data-value="1">
+                        <span class="rating-emoji">👎</span>
+                        <span class="rating-label">Never</span>
+                    </button>
+                    <button type="button" class="rating-option" data-value="2">
+                        <span class="rating-emoji">🤷</span>
+                        <span class="rating-label">Unlikely</span>
+                    </button>
+                    <button type="button" class="rating-option" data-value="3">
+                        <span class="rating-emoji">🤔</span>
+                        <span class="rating-label">Maybe</span>
+                    </button>
+                    <button type="button" class="rating-option" data-value="4">
+                        <span class="rating-emoji">👍</span>
+                        <span class="rating-label">Likely</span>
+                    </button>
+                    <button type="button" class="rating-option" data-value="5">
+                        <span class="rating-emoji">💯</span>
+                        <span class="rating-label">Definitely</span>
+                    </button>
+                </div>
+                <div class="rating-scale">
+                    <span>Would not recommend</span>
+                    <span>Highly recommend</span>
+                </div>
+            </div>
+            
+            <div class="comment-section">
+                <label for="patientName">Your Name (Optional)</label>
+                <input 
+                    type="text" 
+                    id="patientName" 
+                    class="comment-input"
+                    placeholder="Enter your name..."
+                />
+            </div>
+
+            <div class="comment-section">
+                <label for="patientContact">Email or Phone (Optional)</label>
+                <input 
+                    type="text" 
+                    id="patientContact" 
+                    class="comment-input"
+                    placeholder="your.email@example.com or +234 801 234 5678"
+                />
+            </div>
+            
+            <div class="comment-section">
+                <label for="comments">Share your experience with us</label>
+                <textarea 
+                    id="comments" 
+                    class="comment-textarea"
+                    placeholder="Tell us about your visit, our staff, facilities, or any suggestions for improvement..."
+                    rows="4"
+                ></textarea>
+            </div>
+            
+            <div class="submit-section">
+                <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                    Submit Feedback
+                </button>
+            </div>
+        </div>
+        
+        <div class="thank-you" id="thankYou">
+            <div class="success-icon"></div>
+            <h2>Thank You!</h2>
+            <p>Your valuable feedback has been received. We truly appreciate you taking the time to help us improve our healthcare services.</p>
+        </div>
+    </div>
+
+    <script>
+        let satisfactionRating = null;
+        let recommendRating = null;
+        
+        // Update progress indicator
+        function updateProgress() {
+            const dots = document.querySelectorAll('.progress-dot');
+            let activeCount = 1;
+            
+            if (satisfactionRating !== null) activeCount = 2;
+            if (recommendRating !== null) activeCount = 3;
+            
+            dots.forEach((dot, index) => {
+                if (index < activeCount) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+        
+        // Handle rating button clicks
+        document.querySelectorAll('.rating-option').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const container = this.parentElement;
+                const containerType = container.id;
+                
+                // Remove selected class from siblings
+                container.querySelectorAll('.rating-option').forEach(sibling => {
+                    sibling.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked button
+                this.classList.add('selected');
+                
+                // Store the rating value
+                const value = parseInt(this.dataset.value);
+                if (containerType === 'satisfactionRating') {
+                    satisfactionRating = value;
+                } else if (containerType === 'recommendRating') {
+                    recommendRating = value;
+                }
+                
+                // Add haptic feedback for mobile
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+                
+                // Update progress and submit button
+                updateProgress();
+                updateSubmitButton();
+            });
+        });
+        
+        function updateSubmitButton() {
+            const submitBtn = document.getElementById('submitBtn');
+            if (satisfactionRating !== null && recommendRating !== null) {
+                submitBtn.disabled = false;
+            }
+        }
+        
+        // Handle form submission
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const patientName = document.getElementById('patientName').value.trim();
+            const patientContact = document.getElementById('patientContact').value.trim();
+            const comments = document.getElementById('comments').value;
+            const timestamp = new Date().toISOString();
+            
+            const feedbackData = {
+                satisfaction: satisfactionRating,
+                recommendation: recommendRating,
+                patientName: patientName || 'Anonymous',
+                patientContact: patientContact || 'Not provided',
+                comments: comments,
+                timestamp: timestamp,
+                userAgent: navigator.userAgent,
+                hospital: 'Magodo Specialist Hospital'
+            };
+            
+            // Submit feedback
+            submitFeedback(feedbackData);
+        });
+        
+        function submitFeedback(data) {
+            // Show loading state
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.innerHTML = '<span style="opacity: 0.7">Submitting...</span>';
+            submitBtn.disabled = true;
+            
+            // Send email with analysis
+            sendFeedbackEmail(data);
+            
+            // Show thank you message after a short delay
+            setTimeout(() => {
+                document.getElementById('surveyForm').style.display = 'none';
+                document.getElementById('thankYou').style.display = 'block';
+            }, 1500);
+        }
+        
+        function analyzeTextFeedback(text) {
+            if (!text || text.trim().length === 0) {
+                return {
+                    score: 3, // Neutral for no comment
+                    sentiment: 'neutral',
+                    keywords: [],
+                    issues: [],
+                    positives: []
+                };
+            }
+            
+            const lowerText = text.toLowerCase();
+            
+            // Enhanced keyword categories with better weights
+            const positiveWords = {
+                'excellent': 5, 'amazing': 5, 'outstanding': 5, 'exceptional': 5, 'perfect': 5,
+                'great': 4, 'good': 4, 'wonderful': 4, 'fantastic': 4, 'lovely': 4, 'awesome': 4,
+                'nice': 3, 'okay': 3, 'fine': 3, 'decent': 3, 'satisfied': 4,
+                'professional': 4, 'friendly': 4, 'helpful': 4, 'clean': 4, 'caring': 4,
+                'quick': 3, 'fast': 3, 'efficient': 4, 'recommend': 4, 'happy': 4, 'pleased': 4,
+                'impressed': 4, 'comfortable': 3, 'smooth': 3, 'easy': 3, 'thorough': 4
+            };
+            
+            const negativeWords = {
+                // Very negative (score 1)
+                'terrible': 1, 'awful': 1, 'horrible': 1, 'worst': 1, 'hate': 1, 'disgusting': 1,
+                'unacceptable': 1, 'outrageous': 1, 'appalling': 1, 'shocking': 1, 'ridiculous': 1,
+                'nightmare': 1, 'disaster': 1, 'useless': 1, 'pathetic': 1, 'incompetent': 1,
+                
+                // Moderately negative (score 2)
+                'bad': 2, 'poor': 2, 'disappointing': 2, 'frustrated': 2, 'annoyed': 2, 'upset': 2,
+                'dissatisfied': 2, 'unhappy': 2, 'concerned': 2, 'worried': 2, 'uncomfortable': 2,
+                'unprofessional': 1, 'rude': 1, 'disrespectful': 1, 'careless': 2, 'negligent': 1,
+                
+                // Service issues
+                'slow': 2, 'delayed': 2, 'late': 2, 'waiting': 2, 'wait': 2, 'long': 2,
+                'expensive': 2, 'overpriced': 2, 'costly': 2, 'dirty': 1, 'unclean': 1, 'messy': 2,
+                
+                // Staff issues
+                'untrained': 1, 'inexperienced': 2, 'unfriendly': 2, 'dismissive': 1, 'arrogant': 1,
+                'insensitive': 1, 'cold': 2, 'harsh': 2, 'impatient': 2
+            };
+            
+            // Enhanced negative phrases and patterns
+            const negativePatterns = [
+                { pattern: /without empathy|no empathy|lack.*empathy/i, weight: 1, issue: 'lack of empathy' },
+                { pattern: /never.*again|won't.*back|not.*returning/i, weight: 1, issue: 'will not return' },
+                { pattern: /moving mountains|extremely difficult/i, weight: 1, issue: 'very reluctant to return' },
+                { pattern: /counterproductive|makes no sense/i, weight: 2, issue: 'questions approach' },
+                { pattern: /don't you think|shouldn't.*be/i, weight: 2, issue: 'rhetorical criticism' },
+                { pattern: /how can.*\?/i, weight: 2, issue: 'questioning service' },
+                { pattern: /treated.*badly|treated.*poorly|mistreated/i, weight: 1, issue: 'poor treatment' },
+                { pattern: /staff.*problem|staff.*issue|staff.*rude/i, weight: 1, issue: 'staff problems' },
+                { pattern: /waste.*time|wasted.*time/i, weight: 2, issue: 'time wasted' },
+                { pattern: /no point|what's the point/i, weight: 1, issue: 'questioning value' }
+            ];
+            
+            const issueKeywords = [
+                'wait', 'waiting', 'delay', 'delayed', 'late', 'slow', 'long time', 'hours',
+                'rude', 'unfriendly', 'unprofessional', 'dismissive', 'arrogant', 'cold',
+                'dirty', 'unclean', 'messy', 'crowded', 'noisy',
+                'expensive', 'cost', 'price', 'billing', 'payment', 'overpriced',
+                'appointment', 'schedule', 'booking', 'availability', 'cancelled',
+                'empathy', 'compassion', 'understanding', 'care', 'treatment',
+                'staff', 'nurse', 'doctor', 'reception', 'service'
+            ];
+            
+            // Calculate sentiment score
+            let totalScore = 0;
+            let wordCount = 0;
+            let foundKeywords = [];
+            let issues = [];
+            let positives = [];
+            let negativeModifier = 0;
+            
+            // Check for negative patterns first (these are strong indicators)
+            negativePatterns.forEach(pattern => {
+                if (pattern.pattern.test(text)) {
+                    totalScore += pattern.weight;
+                    wordCount++;
+                    issues.push(pattern.issue);
+                    negativeModifier += (3 - pattern.weight); // Additional penalty for patterns
+                }
+            });
+            
+            // Check positive words
+            Object.keys(positiveWords).forEach(word => {
+                if (lowerText.includes(word)) {
+                    totalScore += positiveWords[word];
+                    wordCount++;
+                    foundKeywords.push(word);
+                    positives.push(word);
+                }
+            });
+            
+            // Check negative words
+            Object.keys(negativeWords).forEach(word => {
+                if (lowerText.includes(word)) {
+                    totalScore += negativeWords[word];
+                    wordCount++;
+                    foundKeywords.push(word);
+                }
+            });
+            
+            // Identify specific issues
+            issueKeywords.forEach(issue => {
+                if (lowerText.includes(issue)) {
+                    if (!issues.includes(issue)) {
+                        issues.push(issue);
+                    }
+                }
+            });
+            
+            // Check for question marks (often indicate complaints)
+            const questionMarks = (text.match(/\?/g) || []).length;
+            if (questionMarks > 1) {
+                negativeModifier += 0.5; // Multiple questions often indicate frustration
+            }
+            
+            // Check for exclamation marks (can indicate strong emotion)
+            const exclamationMarks = (text.match(/!/g) || []).length;
+            if (exclamationMarks > 1) {
+                negativeModifier += 0.3;
+            }
+            
+            // Calculate final score (1-5 scale)
+            let finalScore;
+            if (wordCount === 0) {
+                finalScore = 3; // Neutral if no sentiment words found
+            } else {
+                const averageScore = totalScore / wordCount;
+                finalScore = Math.max(1, Math.min(5, averageScore - negativeModifier));
+            }
+            
+            // Apply additional logic for clearly negative feedback
+            if (issues.length > 2 && finalScore > 2.5) {
+                finalScore = Math.max(1.5, finalScore - 1); // Penalty for multiple issues
+            }
+            
+            // If negative patterns were found, cap the score
+            if (negativeModifier > 1 && finalScore > 2) {
+                finalScore = Math.min(2, finalScore);
+            }
+            
+            finalScore = Math.round(finalScore * 10) / 10; // Round to 1 decimal
+            
+            // Determine sentiment label
+            let sentiment;
+            if (finalScore >= 4) sentiment = 'positive';
+            else if (finalScore <= 2) sentiment = 'negative';
+            else sentiment = 'neutral';
+            
+            return {
+                score: finalScore,
+                sentiment: sentiment,
+                keywords: foundKeywords,
+                issues: issues,
+                positives: positives,
+                textLength: text.length,
+                isDetailed: text.length > 50,
+                questionMarks: questionMarks,
+                exclamationMarks: exclamationMarks,
+                negativeModifier: negativeModifier
+            };
+        }
+        
+        function sendFeedbackEmail(data) {
+            const satisfactionLabels = ['', 'Very Poor', 'Poor', 'Fair', 'Good', 'Excellent'];
+            const recommendLabels = ['', 'Never', 'Unlikely', 'Maybe', 'Likely', 'Definitely'];
+            
+            // Analyze text feedback
+            const textAnalysis = analyzeTextFeedback(data.comments);
+            
+            // Calculate overall score (weighted average)
+            const overallScore = (
+                (data.satisfaction * 0.4) + 
+                (data.recommendation * 0.4) + 
+                (textAnalysis.score * 0.2)
+            ).toFixed(1);
+            
+            // Determine priority level
+            let priority = 'Normal';
+            let priorityEmoji = '🟡';
+            if (overallScore <= 2.5) {
+                priority = 'High - Needs Attention';
+                priorityEmoji = '🔴';
+            } else if (overallScore >= 4.5) {
+                priority = 'Low - Very Satisfied';
+                priorityEmoji = '🟢';
+            }
+            
+            // Create detailed analysis for email
+            let analysisDetails = `
+DETAILED ANALYSIS:
+• Overall Score: ${overallScore}/5.0
+• Text Sentiment: ${textAnalysis.sentiment.charAt(0).toUpperCase() + textAnalysis.sentiment.slice(1)} (${textAnalysis.score}/5)
+• Priority Level: ${priority} ${priorityEmoji}`;
+
+            if (textAnalysis.issues.length > 0) {
+                analysisDetails += `\n• Issues Mentioned: ${textAnalysis.issues.join(', ')}`;
+            }
+            
+            if (textAnalysis.positives.length > 0) {
+                analysisDetails += `\n• Positive Aspects: ${textAnalysis.positives.join(', ')}`;
+            }
+            
+            if (textAnalysis.isDetailed) {
+                analysisDetails += `\n• Detailed Feedback: Yes (${textAnalysis.textLength} characters)`;
+            }
+            
+            if (textAnalysis.keywords.length > 0) {
+                analysisDetails += `\n• Keywords Found: ${textAnalysis.keywords.join(', ')}`;
+            }
+            
+            // Prepare email template parameters
+            const templateParams = {
+                hospital_name: 'Magodo Specialist Hospital',
+                patient_name: data.patientName,
+                patient_contact: data.patientContact,
+                satisfaction_rating: `${satisfactionLabels[data.satisfaction]} (${data.satisfaction}/5)`,
+                recommendation_score: `${recommendLabels[data.recommendation]} (${data.recommendation}/5)`,
+                comments: data.comments || 'No additional comments provided',
+                timestamp: new Date(data.timestamp).toLocaleString(),
+                overall_score: `${overallScore}/5.0`,
+                priority_level: `${priority} ${priorityEmoji}`,
+                sentiment: textAnalysis.sentiment.charAt(0).toUpperCase() + textAnalysis.sentiment.slice(1),
+                text_score: `${textAnalysis.score}/5`,
+                analysis_details: analysisDetails,
+                issues_found: textAnalysis.issues.length > 0 ? textAnalysis.issues.join(', ') : 'None',
+                positives_found: textAnalysis.positives.length > 0 ? textAnalysis.positives.join(', ') : 'None'
+            };
+            
+            // Send email via EmailJS
+            emailjs.send('service_vmknsar', 'template_2wpah22', templateParams)
+                .then(function(response) {
+                    console.log('Email sent successfully!', response.status, response.text);
+                    console.log('Analysis Results:', textAnalysis);
+                    console.log('Overall Score:', overallScore);
+                }, function(error) {
+                    console.log('Email failed to send:', error);
+                });
+        }
+    </script>
+</body>
+</html>
